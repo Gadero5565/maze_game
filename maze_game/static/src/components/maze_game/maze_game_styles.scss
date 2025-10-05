@@ -1,0 +1,273 @@
+// Define variables for easier theming
+$cell-size-default: 20px;
+$cell-size-small: 15px;
+$cell-size-xsmall: 10px; // New for very small screens
+$primary-color: #007bff;
+$success-color: #28a745;
+$warning-color: #ffc107;
+$danger-color: #dc3545;
+$wall-color: #333;
+$path-color: #fff;
+
+.maze-game-container {
+    max-width: 100%;
+    max-height: 100vh;
+    overflow:auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box; // Ensure padding doesn't add to width
+
+    .game-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #ddd;
+
+        h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 20px;
+
+            .stat {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .label {
+                    font-size: 12px;
+                    color: #666;
+                    text-transform: uppercase;
+                }
+
+                .value {
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #333;
+                }
+            }
+        }
+    }
+
+    .game-controls {
+        margin-bottom: 20px;
+        text-align: center;
+
+        .btn {
+            margin: 0 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.1s; // Added subtle scale on hover for polish
+
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+            &:focus {
+                outline: 2px solid $primary-color; // Accessibility: keyboard focus
+            }
+
+            &:hover:not(:disabled) {
+                transform: scale(1.05); // Subtle hover effect
+            }
+        }
+
+        .btn-primary {
+            background-color: $primary-color;
+            color: white;
+
+            &:hover:not(:disabled) {
+                background-color: darken($primary-color, 15%);
+            }
+        }
+
+        .btn-warning {
+            background-color: $warning-color;
+            color: #212529;
+
+            &:hover {
+                background-color: darken($warning-color, 15%);
+            }
+        }
+
+        .btn-success {
+            background-color: $success-color;
+            color: white;
+
+            &:hover {
+                background-color: darken($success-color, 15%);
+            }
+        }
+    }
+
+    .maze-grid-container {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+        overflow: auto; // Key fix: Add scrollbars if maze is too large (no more zooming out)
+        max-height: 70vh; // Limit height to 70% of viewport to prevent vertical overflow; adjust as needed
+        max-width: 100%; // Ensure it doesn't exceed container width
+
+        .maze-grid {
+            border: 2px solid $wall-color;
+            background-color: #f8f9fa;
+
+            .maze-row {
+                display: flex;
+
+                div {
+                    width: $cell-size-default;
+                    height: $cell-size-default;
+                    box-sizing: border-box;
+
+                    &.wall {
+                        background-color: $wall-color;
+                    }
+
+                    &.path {
+                        background-color: $path-color;
+                    }
+
+                    &.player {
+                        background-color: $primary-color;
+                        border-radius: 50%;
+                        position: relative;
+
+                        &::after {
+                            content: '';
+                            position: absolute;
+                            top: 20%;
+                            left: 20%;
+                            right: 20%;
+                            bottom: 20%;
+                            background-color: darken($primary-color, 15%);
+                            border-radius: 50%;
+                        }
+                    }
+
+                    &.end {
+                        background-color: $danger-color;
+                        border-radius: 50%;
+                        position: relative;
+
+                        &::after {
+                            content: '🏁';
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            font-size: 0.6em; // Changed to em for scaling with cell size
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .game-completed {
+        text-align: center;
+        margin: 30px 0;
+        padding: 20px;
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 5px;
+
+        .victory-message {
+            h3 {
+                color: #155724;
+                margin-bottom: 15px;
+            }
+
+            p {
+                margin: 5px 0;
+                color: #155724;
+                font-size: 16px;
+            }
+        }
+    }
+
+    .instructions {
+        margin-top: 30px;
+        padding: 15px;
+        background-color: #e9ecef;
+        border-radius: 5px;
+
+        h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+
+        p {
+            margin: 5px 0;
+            color: #6c757d;
+        }
+    }
+
+    .alert {
+        padding: 10px 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+
+        &.alert-danger {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    }
+}
+
+// Improved responsive design with more breakpoints
+@media (max-width: 768px) {
+    .maze-game-container {
+        padding: 10px; // Reduce padding on smaller screens
+
+        .maze-grid-container {
+            .maze-grid {
+                .maze-row {
+                    div {
+                        width: $cell-size-small;
+                        height: $cell-size-small;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .maze-game-container {
+        .game-header {
+            flex-direction: column; // Stack header on very small screens
+            gap: 10px;
+        }
+
+        .game-controls {
+            .btn {
+                width: 100%; // Full-width buttons for touch
+                margin: 5px 0;
+            }
+        }
+
+        .maze-grid-container {
+            max-height: 60vh; // Shorter max height for mobile
+
+            .maze-grid {
+                .maze-row {
+                    div {
+                        width: $cell-size-xsmall;
+                        height: $cell-size-xsmall;
+                    }
+                }
+            }
+        }
+    }
+}

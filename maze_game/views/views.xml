@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="action_open_maze_game_view" model="ir.actions.client">
+            <field name="name">Maze Game</field>
+            <field name="tag">maze_game</field>
+        </record>
+
+        <menuitem id="menu_maze_game"
+                  name="Maze Game"
+                  action="action_open_maze_game_view"
+                  sequence="10"/>
+
+    </data>
+</odoo>

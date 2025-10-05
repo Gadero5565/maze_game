@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="maze_game.MazeGame" owl="1">
+        <div class="maze-game-container">
+            <!-- Game Header -->
+            <div class="game-header">
+                <h2>Maze Game</h2>
+                <div class="game-stats">
+                    <div class="stat">
+                        <span class="label">Time:</span>
+                        <span class="value" t-esc="formatTime(state.timeElapsed)"/>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Moves:</span>
+                        <span class="value" t-esc="state.moves"/>
+                    </div>
+                </div>
+                <div t-if="state.lastScore" class="last-score">
+                    <span class="label">Your Last Score (from <t t-esc="state.lastScore.date"/>):</span>
+                    <span class="value"><t t-esc="state.lastScore.moves"/> moves in <t t-esc="formatTime(state.lastScore.time_elapsed)"/></span>
+                </div>
+            </div>
+
+            <!-- Game Controls -->
+            <div class="game-controls">
+                <button t-if="!state.gameStarted and !state.gameCompleted"
+                        t-on-click="startGame"
+                        class="btn btn-primary"
+                        t-att-disabled="state.loading ? '' : null">
+                    <t t-if="state.loading">Generating Maze...</t>
+                    <t t-else="">Start Game</t>
+                </button>
+
+                <button t-if="state.gameStarted"
+                        t-on-click="resetGame"
+                        class="btn btn-warning">
+                    Reset Game
+                </button>
+
+                <button t-if="state.gameCompleted"
+                        t-on-click="resetGame"
+                        class="btn btn-success">
+                    Play Again
+                </button>
+            </div>
+
+            <!-- Error Message -->
+            <div t-if="state.error" class="alert alert-danger">
+                Error: <t t-esc="state.error"/>
+            </div>
+
+            <!-- Maze Grid -->
+            <div t-if="state.maze" class="maze-grid-container">
+                <div class="maze-grid">
+                    <t t-foreach="state.maze" t-as="row" t-key="row_index">
+                        <div class="maze-row">
+                            <t t-foreach="row" t-as="cell" t-key="cell_index">
+                                <div t-att-class="getCellClass(row_index, cell_index)"/>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+
+            <!-- Game Completed Message -->
+            <div t-if="state.gameCompleted" class="game-completed">
+                <div class="victory-message">
+                    <h3>🎉 Congratulations! 🎉</h3>
+                    <p>You completed the maze in <strong t-esc="formatTime(state.timeElapsed)"/></p>
+                    <p>with <strong t-esc="state.moves"/> moves!</p>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="instructions">
+                <h4>How to Play:</h4>
+                <p>Use the arrow keys to navigate through the maze.</p>
+                <p>Reach the red end point as quickly as possible with the fewest moves!</p>
+            </div>
+        </div>
+    </t>
+</templates>
